@@ -1,1 +1,520 @@
-index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MateAventura Venezuela - Apoyo Matemático Infantil</title>
+    <link rel="icon" type="image/png" href="https://drive.google.com/file/d/1btDn48E_FQwtAaeEoCwT7-hjmr38Bz5R/view?usp=drive_link">
+    <style>
+        /* ... (TODO TU CSS ANTERIOR, con un pequeño añadido) ... */
+        :root {
+            --color-primario: #e8491d; /* Naranja */
+            --color-secundario: #35424a; /* Azul oscuro */
+            --color-acento1: #ffc107; /* Amarillo */
+            --color-acento2: #20c997; /* Verde-Agua */
+            --color-fondo-claro: #f0f8ff; /* Azul cielo muy claro */
+            --texto-blanco: #ffffff;
+            --texto-oscuro: #333;
+            --fuente-principal: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--fuente-principal);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo-claro);
+            color: var(--texto-oscuro);
+            background-image: url('http://imgfz.com/i/5cO0QLC.jpeg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        header {
+            color: var(--texto-blanco);
+            padding: 15px 10px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 107, 71, 0.9), rgba(255, 165, 0, 0.9), rgba(60, 179, 113, 0.9), rgba(72, 209, 204, 0.9));
+            background-size: 400% 400%;
+            animation: animatedGradient 18s ease infinite;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        @keyframes animatedGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+            padding: 0 5px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transform: translateX(-100%); 
+            animation: slideInFromLeft 1s ease-out 0.5s forwards, titleShine 4s ease-in-out infinite 2s;
+        }
+
+        header p {
+            font-size: 0.9em;
+            margin-top: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transform: translateX(100%); 
+            animation: slideInFromRight 1s ease-out 1s forwards;
+        }
+
+        @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-100%); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInFromRight { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes titleShine { 
+            0%, 100% { text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7), 0 0 3px rgba(255,255,255,0.2); }
+            50% { text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.75), 0 0 15px rgba(255,255,255,0.5); }
+        }
+        
+        .header-img {
+            height: 50px; width: auto; margin: 0 5px;
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.45));
+            opacity: 0;
+        }
+        .header-img:nth-of-type(1) { animation: imageFadeInScale 1s ease-out 0.2s forwards; }
+        .header-img:nth-of-type(2) { animation: imageFadeInScale 1s ease-out 0.3s forwards; }
+        @keyframes imageFadeInScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        nav {
+            background: var(--color-primario); color: var(--texto-blanco);
+            padding: 8px 0; text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        nav a { /* MODIFICADO: ahora usaré data-target en lugar de href para navegación SPA */
+            color: var(--texto-blanco); text-decoration: none;
+            padding: 8px 10px; font-weight: bold; font-size: 0.9em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer; /* Indicar que es clickeable */
+        }
+        nav a:hover { background: var(--color-acento1); color: var(--color-secundario); border-radius: 5px; transform: translateY(-2px); }
+
+        /* CLASE PARA OCULTAR PÁGINAS/VISTAS */
+        .page-view {
+            display: none; /* Oculto por defecto */
+            padding: 15px; /* Padding general para las vistas */
+            animation: pageFadeIn 0.5s ease-out; /* Animación de entrada para la página */
+        }
+        .page-view.active {
+            display: block; /* Mostrar la página activa */
+        }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* El .grid-container-main ahora es parte de la página de inicio */
+        #page-inicio .grid-container-main { /* Aplicar estilos de grid a la página de inicio */
+            display: grid;
+            grid-template-columns: 1fr; 
+            gap: 20px;
+            /* padding: 15px; No es necesario aquí si .page-view ya tiene padding */
+            max-width: 1600px; 
+            margin: 0 auto; /* Quitar margen superior si .page-view lo maneja */
+        }
+
+
+        .grid-item-section {
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 20px; border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center; opacity: 0;
+            animation: fadeInSlideUpGridItem 0.8s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            min-height: 250px; 
+        }
+        .grid-item-section:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ... (Resto de tus estilos para .grid-item-section, h2, h3, p, ol, btn-accion, etc. se mantienen) ... */
+        /* Solo asegúrate de que no entren en conflicto con los estilos de las nuevas "páginas" */
+
+        #proposito.grid-item-section { border-top: 5px solid var(--color-primario); animation-delay: 0.2s;}
+        #recursos.grid-item-section { border-top: 5px solid var(--color-acento1); animation-delay: 0.3s;}
+        #info-apoyo.grid-item-section { border-top: 5px solid var(--color-acento2); animation-delay: 0.4s;}
+        #comunidad.grid-item-section { border-top: 5px solid #4a90e2; animation-delay: 0.5s;}
+        #objetivos.grid-item-section { border-top: 5px solid #9013fe; animation-delay: 0.6s;}
+
+        .grid-item-section h2 {
+            color: var(--color-secundario); border-bottom: 2px solid currentColor;
+            padding-bottom: 10px; margin-top: 0; margin-bottom: 15px;
+            display: inline-block; font-size: 1.5em;
+        }
+        .grid-item-section h3 {
+            color: var(--color-primario); margin-top: 10px; margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+        .grid-item-section p {
+            margin-bottom: 10px; font-size: 0.9em; flex-grow: 1;
+        }
+        .grid-item-section ol {
+            list-style-type: none; padding-left: 0; counter-reset: item-counter;
+            text-align: left; margin-bottom: 10px; flex-grow: 1;
+        }
+        .grid-item-section ol li {
+            margin-bottom: 8px; padding-left: 30px;
+            position: relative; font-size: 0.9em;
+        }
+        .grid-item-section ol li::before {
+            counter-increment: item-counter; content: counter(item-counter);
+            position: absolute; left: 0; top: 0;
+            background-color: var(--color-primario); color: white;
+            width: 20px; height: 20px; border-radius: 50%;
+            text-align: center; line-height: 20px; font-weight: bold; font-size: 0.8em;
+        }
+
+        .btn-accion {
+            display: inline-block; background-color: var(--color-primario); color: var(--texto-blanco);
+            padding: 10px 18px; text-decoration: none; border-radius: 18px;
+            margin-top: auto; margin-bottom: 0;
+            font-weight: bold; text-align: center; font-size: 0.9em;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            cursor: pointer; /* Para botones que activan JS */
+        }
+        .btn-accion:hover {
+            background-color: var(--color-acento1); color: var(--color-secundario);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+        }
+        .btn-inicio { /* Estilo para el botón de volver a inicio */
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+
+        .three-column-container {
+            display: flex; flex-direction: column; 
+            gap: 15px; margin-top: 10px;
+        }
+        .column-item {
+            flex: 1 1 100%; background-color: #f9f9f9;
+            padding: 15px; border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            text-align: center; opacity: 0;
+            animation: fadeInSlideUpGridItem 0.7s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .column-item:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.15); }
+        #recursos .column-item.color-1 { border-top: 4px solid #ff6b3f; animation-delay: 0.4s; }
+        #recursos .column-item.color-2 { border-top: 4px solid #ffc107; animation-delay: 0.5s; }
+        #recursos .column-item.color-3 { border-top: 4px solid #20c997; animation-delay: 0.6s; }
+
+        .column-item h3 { font-size: 1.1em; margin-bottom: 8px; color: var(--color-secundario); }
+        .column-item p { font-size: 0.85em; color: #555; margin-bottom: 10px; flex-grow: 1; }
+        .column-item .btn-accion { padding: 8px 12px; font-size: 0.85em; }
+
+        @keyframes fadeInSlideUpGridItem {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        footer {
+            text-align: center; padding: 20px; background: var(--color-secundario);
+            color: var(--texto-blanco); margin-top: 20px;
+        }
+        .social-links { margin-top: 8px; margin-bottom: 12px; }
+        .social-links a { color: var(--texto-blanco); margin: 0 10px; text-decoration: none; font-size: 1.2em; transition: color 0.3s ease, transform 0.2s ease; }
+        .social-links a:hover { color: var(--color-primario); transform: scale(1.1); }
+
+
+        /* --- MEDIA QUERIES (SE MANTIENEN IGUAL, PERO APLICARÁN A LA VISTA ACTIVA) --- */
+        @media (min-width: 600px) { 
+            #page-inicio .grid-container-main { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+            header h1 { font-size: 2.2em; }
+            header p { font-size: 1em; }
+            .header-img { height: 65px; }
+            nav a { font-size: 1em; }
+            .grid-item-section h2 { font-size: 1.6em; }
+            .three-column-container { flex-direction: row; }
+            .column-item { flex-basis: calc(50% - 10px); } 
+        }
+
+        @media (min-width: 900px) { 
+            #page-inicio .grid-container-main { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));  }
+            header { padding: 20px; min-height: 100px; }
+            header h1 { font-size: 2.6em; }
+            header p { font-size: 1.2em; }
+            .header-img { height: 75px; margin: 0 20px; }
+            nav { padding: 12px 0; }
+            nav a { padding: 10px 20px; font-size: 1.05em; }
+            .grid-item-section h2 { font-size: 1.7em; }
+            .column-item { flex-basis: calc(33.333% - 10px); }
+        }
+
+        @media (min-width: 1200px) { 
+            #page-inicio .grid-container-main { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+             .grid-item-section h2 { font-size: 1.8em; }
+        }
+
+        @media (min-width: 1500px) { 
+            #page-inicio .grid-container-main { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="http://imgfz.com/i/DxbBgQq.png" alt="Ilustración Matemática 1" class="header-img">
+        <div class="header-content">
+            <h1>MateAventura Venezuela</h1>
+            <p>Ayudando a los niños con dificultades en matemáticas</p>
+        </div>
+        <img src="http://imgfz.com/i/R3Xr02U.png" alt="Ilustración Matemática 2" class="header-img">
+    </header>
+
+    <nav>
+        <!-- MODIFICADO: Usar data-target para indicar la página a mostrar -->
+        <a data-target="page-inicio">Inicio</a>
+        <a data-target="page-proposito-detalle">Propósito</a>
+        <a data-target="page-recursos-detalle">Recursos</a>
+        <a data-target="page-infoapoyo-detalle">Info y Apoyo</a>
+        <a data-target="page-comunidad-detalle">Comunidad</a>
+        <a data-target="page-objetivos-detalle">Objetivos</a>
+    </nav>
+
+    <!-- Contenedor de todas las "páginas" o "vistas" -->
+    <div id="page-container">
+
+        <!-- VISTA DE INICIO (Contenido principal anterior) -->
+        <div id="page-inicio" class="page-view active"> <!-- 'active' para mostrarla por defecto -->
+            <main class="grid-container-main">
+                <section id="proposito" class="grid-item-section">
+                    <h2>Propósito del Proyecto</h2>
+                    <p>Ayudar a niños con dificultades matemáticas mediante recursos...</p>
+                    <a href="proposito.html" class="btn-accion" target="proposito.html">Nuestra Misión</a>
+                </section>
+                <section id="recursos" class="grid-item-section">
+                    <h2>Recursos Estrella</h2>
+                    <p>Explora herramientas interactivas...</p>
+                    <div class="three-column-container">
+                        <article class="column-item color-1">
+                            <h3>Ejercicios Prácticos</h3>
+                            <p>Refuerza conceptos...</p>
+                            <a href="juegoinicial.html" class="btn-accion" target="juegoinicial.html">Ver Ejercicios</a>
+                        </article>
+                        <article class="column-item color-2">
+                            <h3>Materiales Multisensoriales</h3>
+                            <p>Videos, canciones...</p>
+                            <a href="Video.html" class="btn-accion" target="button-link">Descubrir</a>
+                        </article>
+                        <article class="column-item color-3">
+                            <h3>Juegos y Desafíos</h3>
+                            <p>Aprende jugando...</p>
+                            <a href="#" class="btn-accion" target="_blank">¡A Jugar!</a>
+                        </article>
+                    </div>
+                </section>
+                <section id="info-apoyo" class="grid-item-section">
+                    <h2>Información y Apoyo</h2>
+                    <p>Guías y consejos para padres y educadores...</p>
+                    <a href="#" class="btn-accion" target="_blank">Más Información</a>
+                </section>
+                <section id="comunidad" class="grid-item-section">
+                    <h2>Comunidad Online</h2>
+                    <p>Conéctate con otros niños, padres y educadores...</p>
+                    <a href="#" class="btn-accion" target="_blank">Unirse Ahora</a>
+                </section>
+                <section id="objetivos" class="grid-item-section">
+                    <h2>Nuestros Objetivos</h2>
+                    <ol>
+                        <li>Brindar herramientas educativas integrales.</li>
+                        <li>Fomentar el aprendizaje multisensorial.</li>
+                        <li>Ampliar el coeficiente interactivo.</li>
+                        <li>Promover el apoyo cooperativo online.</li>
+                    </ol>
+                    <a href="#" class="btn-accion" target="_blank">Ver Detalles</a>
+                </section>
+            </main>
+        </div>
+
+        <!-- VISTA DE DETALLE DEL PROPÓSITO -->
+        <div id="page-proposito-detalle" class="page-view">
+            <div class="section-content-block" style="text-align: left; max-width: 800px; margin: 20px auto;"> <!-- Estilo simple para centrar contenido -->
+                <h2>Detalles del Propósito de MateAventura</h2>
+                <p>Aquí va una descripción mucho más detallada sobre el propósito de la página web, su misión, visión, los valores que la impulsan, y cómo planea impactar positivamente a los niños con dificultades en matemáticas en Venezuela.</p>
+                <p>Se pueden incluir testimonios (ficticios por ahora), historias de éxito esperadas, y un llamado a la acción más específico para involucrarse o apoyar el proyecto.</p>
+                <!-- ... más contenido ... -->
+                <button class="btn-accion btn-inicio" data-target="page-inicio">Volver a Inicio</button>
+            </div>
+        </div>
+
+        <!-- VISTA DE DETALLE DE RECURSOS -->
+        <div id="page-recursos-detalle" class="page-view">
+             <div class="section-content-block" style="text-align: left; max-width: 800px; margin: 20px auto;">
+                <h2>Explora Nuestros Recursos a Fondo</h2>
+                <p>En esta sección, detallaremos cada tipo de recurso que ofrecemos. Por ejemplo:</p>
+                <h3>Ejercicios Prácticos Interactivos</h3>
+                <p>Explicación de cómo funcionan, los niveles disponibles, ejemplos de ejercicios (quizás imágenes o descripciones).</p>
+                <h3>Videoteca Educativa</h3>
+                <p>Listado de temas cubiertos por los videos, cómo acceder a ellos, beneficios de los videos explicativos y canciones.</p>
+                <h3>Materiales Descargables</h3>
+                <p>Si aplica, mención de guías, hojas de trabajo, etc.</p>
+                <!-- ... más contenido detallado sobre recursos ... -->
+                <button class="btn-accion btn-inicio" data-target="page-inicio">Volver a Inicio</button>
+            </div>
+        </div>
+
+        <!-- VISTA DE DETALLE DE INFO Y APOYO -->
+        <div id="page-infoapoyo-detalle" class="page-view">
+            <div class="section-content-block" style="text-align: left; max-width: 800px; margin: 20px auto;">
+                <h2>Centro de Información y Apoyo</h2>
+                <p>Para padres: Artículos sobre cómo identificar dificultades, estrategias para ayudar en casa, cómo comunicarse con la escuela.</p>
+                <p>Para educadores: Recursos pedagógicos, ideas para el aula inclusiva, enlaces a investigaciones relevantes.</p>
+                <p>Para niños: Consejos para estudiar, cómo pedir ayuda, historias inspiradoras.</p>
+                <!-- ... más contenido ... -->
+                <button class="btn-accion btn-inicio" data-target="page-inicio">Volver a Inicio</button>
+            </div>
+        </div>
+
+        <!-- VISTA DE DETALLE DE COMUNIDAD -->
+        <div id="page-comunidad-detalle" class="page-view">
+            <div class="section-content-block" style="text-align: left; max-width: 800px; margin: 20px auto;">
+                <h2>Nuestra Comunidad en Línea</h2>
+                <p>Descripción del foro o plataforma de comunidad, reglas de participación, cómo registrarse, beneficios de ser parte (apoyo mutuo, compartir recursos, eventos online).</p>
+                <p>Destacar la importancia del aspecto biopsicosocial y cómo la comunidad contribuye a ello.</p>
+                <!-- ... más contenido ... -->
+                <button class="btn-accion btn-inicio" data-target="page-inicio">Volver a Inicio</_button>
+            </div>
+        </div>
+        
+        <!-- VISTA DE DETALLE DE OBJETIVOS -->
+        <div id="page-objetivos-detalle" class="page-view">
+            <div class="section-content-block" style="text-align: left; max-width: 800px; margin: 20px auto;">
+                <h2>Profundizando en Nuestros Objetivos</h2>
+                <p>Aquí se puede expandir cada uno de los objetivos listados:</p>
+                <ol>
+                    <li><strong>Brindar herramientas educativas integrales:</strong> Detallar qué tipo de herramientas, cómo se asegura la integralidad, y el enfoque en Venezuela.</li>
+                    <li><strong>Experiencia multisensorial:</strong> Ejemplos concretos de cómo se logra que el niño experimente con todos sus sentidos.</li>
+                    <li><strong>Ampliar coeficiente interactivo:</strong> Explicar qué se entiende por "coeficiente interactivo" en este contexto y cómo las herramientas contribuyen a una educación de calidad.</li>
+                    <li><strong>Interacción y apoyo cooperativo online:</strong> Cómo se fomentará esta interacción, qué plataformas se usarán, y los beneficios del apoyo cooperativo.</li>
+                </ol>
+                <!-- ... más contenido ... -->
+                <button class="btn-accion btn-inicio" data-target="page-inicio">Volver a Inicio</button>
+            </div>
+        </div>
+
+
+    </div> <!-- Fin de #page-container -->
+
+
+    <footer>
+        <!-- ... (Footer sin cambios) ... -->
+        <div class="social-links">
+            <a href="#" target="_blank" title="Facebook">Facebook</a>
+            <a href="#" target="_blank" title="Instagram">Instagram</a>
+            <a href="#" target="_blank" title="Twitter / X">Twitter/X</a>
+            <a href="#" target="_blank" title="YouTube">YouTube</a>
+        </div>
+        <p>© 2025 * Click_Papel * Venezuela - Todos los derechos reservados. </p>
+        
+    </footer>
+
+    <script>
+        // SCRIPT PARA NAVEGACIÓN SPA Y TÍTULO DE PESTAÑA
+        (function() {
+            // --- Navegación SPA ---
+            const navLinks = document.querySelectorAll('nav a[data-target]');
+            const pageViews = document.querySelectorAll('.page-view');
+            const pageContainer = document.getElementById('page-container'); // Contenedor de todas las vistas
+
+            function showPage(targetId) {
+                pageViews.forEach(page => {
+                    if (page.id === targetId) {
+                        page.classList.add('active');
+                    } else {
+                        page.classList.remove('active');
+                    }
+                });
+                window.scrollTo(0, 0); // Volver arriba de la página al cambiar de vista
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // Prevenir comportamiento por defecto del enlace
+                    const targetPageId = this.dataset.target;
+                    showPage(targetPageId);
+                });
+            });
+
+            // Event listener para botones de "Volver a Inicio"
+            // Es importante usar delegación de eventos si los botones se añaden dinámicamente,
+            // pero como están en el HTML inicial, podemos hacerlo directamente.
+            // O mejor, delegar al contenedor de páginas para los botones de inicio.
+            if (pageContainer) {
+                pageContainer.addEventListener('click', function(event) {
+                    if (event.target.matches('.btn-inicio')) {
+                        event.preventDefault();
+                        const targetPageId = event.target.dataset.target;
+                        showPage(targetPageId);
+                    }
+                });
+            }
+
+
+            // --- Animación del Título de Pestaña ---
+            const originalTitle = document.title;
+            const speed = 300; 
+            let position = 0;
+            const scrollingText = originalTitle + " ::: "; 
+
+            let titleScrollTimeout; // Guardar referencia al timeout
+
+            function scrollTitle() {
+                clearTimeout(titleScrollTimeout); // Limpiar timeout anterior si existe
+
+                document.title = scrollingText.substring(position, scrollingText.length) + scrollingText.substring(0, position);
+                position++;
+                if (position >= scrollingText.length) {
+                    position = 0;
+                }
+                if (document.visibilityState === 'visible') {
+                    titleScrollTimeout = setTimeout(scrollTitle, speed);
+                }
+            }
+
+            function handleVisibilityChange() {
+                if (document.visibilityState === 'visible') {
+                    scrollTitle(); // Iniciar/reanudar
+                } else {
+                    clearTimeout(titleScrollTimeout); // Pausar si la pestaña no está visible
+                }
+            }
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            
+            if (document.visibilityState === 'visible') {
+                scrollTitle();
+            }
+
+            // Mostrar la página de inicio por defecto al cargar
+            showPage('page-inicio');
+
+        })();
+    </script>
+</body>
+</html>
