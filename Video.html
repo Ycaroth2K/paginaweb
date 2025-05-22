@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videoteca con Navegación Completa</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            /* padding-bottom: 0; Ya no es necesario sin el contenido extra y el botón fijo de ir arriba */
+            font-family: sans-serif;
+            background-image: url("http://imgfz.com/i/5cO0QLC.jpeg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la pantalla */
+            display: flex; /* Para centrar el video verticalmente si es el único contenido principal */
+            flex-direction: column; /* Para que el header esté arriba y el video debajo */
+            color: white;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.6); /* Un poco más de opacidad para mejor contraste de botones */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            width: 100%; /* Asegura que ocupe todo el ancho */
+            box-sizing: border-box; /* Para que el padding no afecte el width total */
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between; /* Distribuye el título y la navegación */
+            align-items: center;
+            max-width: 1200px; /* Limita el ancho del contenido del header */
+            margin: 0 auto; /* Centra el contenido del header */
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 1.8em; /* Ajustado para más botones */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            white-space: nowrap; /* Evita que el título se rompa en varias líneas fácilmente */
+        }
+
+        .main-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espacio entre botones */
+        }
+
+        .main-navigation button,
+        .main-navigation a.button-link { /* Estilo para enlaces que parecen botones */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px; /* Ligeramente más pequeños */
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none; /* Para los enlaces */
+            display: inline-flex; /* Para alinear íconos si se añaden */
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .main-navigation button:hover,
+        .main-navigation a.button-link:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        .main-navigation button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .video-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            flex-grow: 1; /* Hace que esta sección ocupe el espacio vertical restante */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .video-container {
+            position: relative;
+            width: 90%; /* Ligeramente más grande si es el foco principal */
+            max-width: 1000px; 
+            background-color: rgba(0,0,0,0.65);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .video-container h2 {
+            text-align: center;
+            color: white;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            min-height: 1.2em; 
+        }
+
+        .video-container video {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            outline: none;
+            background-color: #000;
+        }
+
+        /* Ya no necesitamos .extra-content ni #backToTopLink */
+
+    </style>
+</head>
+<body>
+    <!-- El div #top sigue siendo útil si el botón "Inicio" recarga la página o va a un ancla superior -->
+    <div id="top"></div> 
+
+    <header class="page-header">
+        <div class="header-content">
+            <h1>Mi Videoteca</h1>
+            <nav class="main-navigation">
+                <a href="pruebamovil.html" class="button-link">Inicio</a> <!-- Enlace que simula un botón -->
+                 <!-- Botón de Descargas (enlace) -->
+                <button id="prevVideoBtn" title="Video Anterior">← Ant</button>
+                <button id="nextVideoBtn" title="Siguiente Video">Sig →</button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="video-section">
+        <div class="video-container">
+            <h2 id="videoTitle">Cargando video...</h2>
+            <video id="mainVideoPlayer" controls poster="">
+                <source id="mp4Source" src="" type="video/mp4">
+                <source id="webmSource" src="" type="video/webm">
+                <source id="oggSource" src="" type="video/ogg">
+                Tu navegador no soporta la etiqueta de video.
+            </video>
+        </div>
+    </section>
+
+    <!-- El contenido extra y el botón de ir arriba han sido eliminados -->
+
+    <script>
+        const videos = [
+            {
+                title: "Video Naturaleza",
+                poster: "https://via.placeholder.com/1000x562/87CEEB/FFFFFF?text=Poster+Naturaleza",
+                mp4: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                webm: "", ogg: ""
+            },
+            {
+                title: "Animación Creativa",
+                poster: "https://via.placeholder.com/1000x562/FF7F50/FFFFFF?text=Poster+Animacion",
+                mp4: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                webm: "", ogg: ""
+            },
+            {
+                title: "Corto Tecnológico",
+                poster: "https://via.placeholder.com/1000x562/32CD32/FFFFFF?text=Poster+Tecnologia",
+                mp4: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                webm: "", ogg: ""
+            },
+            {
+                title: "Aventuras en el Mar",
+                poster: "https://via.placeholder.com/1000x562/4682B4/FFFFFF?text=Poster+Mar",
+                mp4: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                webm: "", ogg: ""
+            }
+        ];
+
+        let currentVideoIndex = 0;
+
+        const videoPlayer = document.getElementById('mainVideoPlayer');
+        const mp4SrcElement = document.getElementById('mp4Source');
+        const webmSrcElement = document.getElementById('webmSource');
+        const oggSrcElement = document.getElementById('oggSource');
+        const videoTitleElement = document.getElementById('videoTitle');
+        
+        const prevButton = document.getElementById('prevVideoBtn');
+        const nextButton = document.getElementById('nextVideoBtn');
+        // No necesitamos backToTopButton aquí
+
+        function loadVideo(index) {
+            if (index < 0 || index >= videos.length) return;
+            
+            const videoData = videos[index];
+            
+            videoTitleElement.textContent = videoData.title || "Video";
+            videoPlayer.poster = videoData.poster || "";
+            
+            mp4SrcElement.src = videoData.mp4 || "";
+            webmSrcElement.src = videoData.webm || "";
+            oggSrcElement.src = videoData.ogg || "";
+            
+            videoPlayer.load();
+            // Opcional: videoPlayer.play();
+            
+            currentVideoIndex = index;
+            updateNavigationButtons();
+        }
+
+        function updateNavigationButtons() {
+            prevButton.disabled = (currentVideoIndex === 0);
+            nextButton.disabled = (currentVideoIndex === videos.length - 1);
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentVideoIndex > 0) {
+                loadVideo(currentVideoIndex - 1);
+                // Opcional: Desplazar al inicio del video o de la sección de video
+                // document.getElementById('mainVideoPlayer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentVideoIndex < videos.length - 1) {
+                loadVideo(currentVideoIndex + 1);
+                // Opcional: Desplazar
+                // document.getElementById('mainVideoPlayer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        // El botón "Inicio" es un enlace a #top, `scroll-behavior: smooth` en html lo maneja.
+        // El botón "Descargas" es un enlace a otra página.
+
+        // Inicialización
+        if (videos.length > 0) {
+            loadVideo(0);
+        } else {
+            videoTitleElement.textContent = "No hay videos para mostrar.";
+            prevButton.disabled = true;
+            nextButton.disabled = true;
+        }
+
+        // No se necesita el JavaScript para el botón de "Volver Arriba"
+
+    </script>
+</body>
+</html>

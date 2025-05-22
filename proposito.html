@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propósito del Proyecto - MateAventura Venezuela</title>
+    <link rel="icon" type="image/png" href="http://imgfz.com/i/R3Xr02U.png">
+    <style>
+        /* === ESTILOS GENERALES (Reutilizados de la página principal) === */
+        :root {
+            --color-primario: #e8491d; /* Naranja */
+            --color-secundario: #35424a; /* Azul oscuro */
+            --color-acento1: #ffc107; /* Amarillo */
+            --color-acento2: #20c997; /* Verde-Agua */
+            --color-fondo-claro: #f0f8ff;
+            --texto-blanco: #ffffff;
+            --texto-oscuro: #333;
+            --fuente-principal: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--fuente-principal);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-fondo-claro);
+            color: var(--texto-oscuro);
+            background-image: url('http://imgfz.com/i/5cO0QLC.jpeg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            display: flex; /* Para centrar el contenido si es poco */
+            flex-direction: column;
+            min-height: 100vh; /* Asegurar que el footer quede abajo */
+        }
+
+        header {
+            color: var(--texto-blanco);
+            padding: 15px 10px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 107, 71, 0.9), rgba(255, 165, 0, 0.9), rgba(60, 179, 113, 0.9), rgba(72, 209, 204, 0.9));
+            background-size: 400% 400%;
+            animation: animatedGradient 18s ease infinite;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        @keyframes animatedGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .header-content { text-align: center; flex-grow: 1; padding: 0 5px; }
+        header h1 {
+            margin: 0; font-size: 1.8em;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            /* Quitar animación de entrada lateral si se prefiere más simple en página secundaria */
+            /* opacity: 0; transform: translateX(-100%); */
+            /* animation: slideInFromLeft 1s ease-out 0.5s forwards, titleShine 4s ease-in-out infinite 2s; */
+        }
+        header p {
+            font-size: 0.9em; margin-top: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        }
+        .header-img { height: 50px; width: auto; margin: 0 5px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.45)); }
+
+        /* Barra de navegación simplificada o igual, según preferencia */
+        nav {
+            background: var(--color-primario); color: var(--texto-blanco);
+            padding: 8px 0; text-align: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        nav a {
+            color: var(--texto-blanco); text-decoration: none;
+            padding: 8px 15px; font-weight: bold; font-size: 0.95em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        nav a:hover { background: var(--color-acento1); color: var(--color-secundario); border-radius: 5px; transform: translateY(-2px); }
+
+        /* === ESTILOS ESPECÍFICOS PARA LA PÁGINA DE PROPÓSITO === */
+        .purpose-container {
+            flex-grow: 1; /* Para que ocupe el espacio disponible y empuje el footer */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el bloque de contenido horizontalmente */
+            justify-content: center; /* Centra el bloque verticalmente si hay espacio */
+            padding: 20px;
+            text-align: center; /* Centra el texto dentro del bloque por defecto */
+        }
+
+        .purpose-content-block {
+            background-color: rgba(255, 255, 255, 0.97); /* Fondo semi-transparente */
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            max-width: 800px; /* Ancho máximo del contenido */
+            width: 90%; /* Ancho responsivo */
+            text-align: left; /* Alinear texto a la izquierda para párrafos largos */
+            animation: fadeInSlideUpPurpose 0.8s ease-out forwards;
+        }
+         @keyframes fadeInSlideUpPurpose {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        .purpose-content-block h2 {
+            color: var(--color-secundario);
+            border-bottom: 3px solid var(--color-primario);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center; /* Título centrado */
+            font-size: 1.8em;
+        }
+        .purpose-content-block p {
+            margin-bottom: 15px;
+            line-height: 1.7; /* Mejorar legibilidad */
+            font-size: 1em;
+        }
+        .purpose-content-block ul {
+            list-style-position: inside;
+            padding-left: 0;
+            margin-bottom: 15px;
+        }
+        .purpose-content-block ul li {
+            margin-bottom: 8px;
+        }
+
+        .btn-accion { /* Estilo reutilizado */
+            display: inline-block; background-color: var(--color-primario); color: var(--texto-blanco);
+            padding: 10px 20px; text-decoration: none; border-radius: 20px;
+            margin-top: 20px; 
+            font-weight: bold; text-align: center;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-accion:hover {
+            background-color: var(--color-acento1); color: var(--color-secundario);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .button-container { /* Para centrar el botón de regreso */
+            text-align: center;
+            margin-top: 25px;
+        }
+
+
+        footer {
+            text-align: center; padding: 20px; background: var(--color-secundario);
+            color: var(--texto-blanco);
+            /* margin-top: auto; /* Empuja el footer hacia abajo si el contenido es poco */
+        }
+        .social-links { margin-top: 8px; margin-bottom: 12px; }
+        .social-links a { color: var(--texto-blanco); margin: 0 10px; text-decoration: none; font-size: 1.2em; transition: color 0.3s ease, transform 0.2s ease; }
+        .social-links a:hover { color: var(--color-primario); transform: scale(1.1); }
+
+        /* --- MEDIA QUERIES (Ajustes si son necesarios para esta página específica) --- */
+        @media (min-width: 768px) {
+            header h1 { font-size: 2.2em; }
+            header p { font-size: 1em; }
+            .header-img { height: 65px; }
+            nav a { font-size: 1em; }
+            .purpose-content-block h2 { font-size: 2em; }
+            .purpose-content-block p { font-size: 1.05em; }
+        }
+        @media (min-width: 1024px) {
+            header { padding: 20px; min-height: 100px; }
+            header h1 { font-size: 2.6em; }
+            header p { font-size: 1.2em; }
+            .header-img { height: 75px; margin: 0 20px; }
+            nav { padding: 12px 0; }
+            nav a { padding: 10px 20px; font-size: 1.05em; }
+            .purpose-content-block h2 { font-size: 2.2em; }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <img src="http://imgfz.com/i/DxbBgQq.png" alt="Ilustración Matemática 1" class="header-img">
+        <div class="header-content">
+            <h1>MateAventura Venezuela</h1>
+            <p>Propósito del Proyecto</p> <!-- Subtítulo específico de la página -->
+        </div>
+        <img src="http://imgfz.com/i/R3Xr02U.png" alt="Ilustración Matemática 2" class="header-img">
+    </header>
+
+    <nav>
+        <a href="pruebamovil.html">Inicio</a> <!-- Enlace a la página principal -->
+        <!-- Puedes añadir otros enlaces si esta página es parte de una navegación más amplia -->
+        <!-- <a href="recursos.html">Recursos</a> -->
+        <!-- <a href="contacto.html">Contacto</a> -->
+    </nav>
+
+    <main class="purpose-container">
+        <article class="purpose-content-block">
+            <h2>Propósito de Nuestro Proyecto</h2>
+            <p>
+                En el corazón de MateAventura Venezuela yace una misión clara y apasionada: <strong>transformar la experiencia de aprendizaje de las matemáticas para los niños venezolanos que enfrentan dificultades</strong>. Entendemos que los desafíos matemáticos pueden generar frustración y mermar la confianza, por ello, nuestro proyecto está diseñado para ser un faro de apoyo, guía y motivación.
+            </p>
+            <p>
+                Nuestro objetivo primordial es <strong>brindar herramientas educativas integrales y accesibles</strong> que no solo refuercen conceptos académicos, sino que también fomenten una relación positiva y curiosa con los números. Queremos que cada niño descubra que las matemáticas pueden ser divertidas, lógicas y, sobre todo, alcanzables.
+            </p>
+            <h3>¿Cómo lo Lograremos?</h3>
+            <p>A través de tres pilares fundamentales:</p>
+            <ul>
+                <li>
+                    <strong>Recursos Educativos Innovadores:</strong> Ofreceremos ejercicios prácticos adaptados, materiales visuales y multisensoriales como videos explicativos y canciones, diseñados para capturar el interés y facilitar la comprensión desde múltiples ángulos.
+                </li>
+                <li>
+                    <strong>Información y Apoyo Constante:</strong> Proporcionaremos contenido valioso para padres y educadores sobre las dificultades específicas del aprendizaje matemático, estrategias de apoyo efectivas y cómo cultivar un ambiente de aprendizaje estimulante tanto en casa como en la escuela.
+                </li>
+                <li>
+                    <strong>Comunidad Online Vibrante:</strong> Crearemos un espacio seguro y colaborativo donde niños, padres y educadores puedan conectar, compartir experiencias, resolver dudas y apoyarse mutuamente, fortaleciendo el aspecto biopsicosocial tan crucial para el desarrollo integral.
+                </li>
+            </ul>
+            <p>
+                En MateAventura Venezuela, creemos firmemente que cada niño tiene un potencial ilimitado. Aspiramos a ser el catalizador que les permita desbloquearlo, superando barreras y construyendo una base sólida en matemáticas que les servirá para toda la vida, contribuyendo así a una educación de calidad en nuestro país.
+            </p>
+            <div class="button-container">
+              
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#" target="_blank" title="Facebook">Facebook</a>
+            <a href="#" target="_blank" title="Instagram">Instagram</a>
+            <a href="#" target="_blank" title="Twitter / X">Twitter/X</a>
+            <a href="#" target="_blank" title="YouTube">YouTube</a>
+        </div>
+        <p>© 2024 MateAventura Venezuela - Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Script para animación del título de la pestaña (opcional para esta página) -->
+    <script>
+        (function() {
+            const pageTitleText = "Propósito - MateAventura"; // Título específico para esta página
+            const speed = 350; 
+            let position = 0;
+            const scrollingText = pageTitleText + " ::: "; 
+            let titleScrollTimeout;
+
+            function scrollTitle() {
+                clearTimeout(titleScrollTimeout);
+                document.title = scrollingText.substring(position, scrollingText.length) + scrollingText.substring(0, position);
+                position++;
+                if (position >= scrollingText.length) {
+                    position = 0;
+                }
+                if (document.visibilityState === 'visible') {
+                    titleScrollTimeout = setTimeout(scrollTitle, speed);
+                }
+            }
+            function handleVisibilityChange() {
+                if (document.visibilityState === 'visible') {
+                    scrollTitle();
+                } else {
+                    clearTimeout(titleScrollTimeout);
+                }
+            }
+            document.addEventListener('visibilitychange', handleVisibilityChange);
+            if (document.visibilityState === 'visible') {
+                scrollTitle();
+            }
+        })();
+    </script>
+</body>
+</html>

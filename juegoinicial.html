@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos Didácticos de Matemáticas</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        .background-container {
+            background-image: url('http://imgfz.com/i/5cO0QLC.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 80px; /* Más espacio para los botones fijos */
+            padding-bottom: 50px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .content-wrapper {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+            margin-bottom: 20px;
+        }
+
+        #homeButton {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 18px;
+            font-size: 1.1em;
+            background-color: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-decoration: none; /* Para asegurar que si es un link, no tenga subrayado */
+        }
+        #homeButton:hover {
+            background-color: #ffca2c;
+            transform: scale(1.05);
+        }
+        #homeButton:active {
+            transform: scale(0.95);
+        }
+
+        /* Estilo para el enlace "Atrás" */
+        #backLink { /* Cambiado el ID para mayor claridad, pero podrías mantener #backButton */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 18px;
+            font-size: 1.1em;
+            background-color: #6c757d;
+            color: white;
+            border: none; /* Aunque los 'a' no tienen border por defecto, es bueno mantenerlo por si acaso */
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            text-decoration: none; /* Quitar subrayado del enlace */
+            display: inline-block; /* Para que padding y otras propiedades de bloque funcionen bien */
+        }
+        #backLink:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+        #backLink:active {
+            transform: scale(0.95);
+        }
+
+
+        h1 {
+            color: #0056b3;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            color: #007bff;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+
+        .game-section {
+            margin-bottom: 35px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.97);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+        .game-section:nth-child(1) { animation-delay: 0.1s; }
+        .game-section:nth-child(2) { animation-delay: 0.2s; }
+        .game-section:nth-child(3) { animation-delay: 0.3s; }
+        .game-section:nth-child(4) { animation-delay: 0.4s; }
+        .game-section:nth-child(5) { animation-delay: 0.5s; }
+        .game-section:nth-child(6) { animation-delay: 0.6s; }
+
+
+        @keyframes fadeInSlideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question, .feedback, .display, .target-number-display {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .target-number-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .items-display {
+            font-size: 2.5em;
+            margin: 15px 0;
+            color: #ff6347;
+            min-height: 40px;
+        }
+
+        .quantity-options-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .quantity-option {
+            font-size: 2em;
+            padding: 15px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            min-width: 60px;
+            text-align: center;
+        }
+        .quantity-option:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+        }
+        .quantity-option.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
+        }
+
+
+        .number-comparison-display {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #17a2b8;
+            margin: 20px 0;
+        }
+        .number-comparison-display span { padding: 0 15px; }
+
+        .ordering-numbers-display {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #6f42c1;
+            margin: 15px 0;
+            letter-spacing: 10px;
+        }
+        .ordering-input-container input {
+            width: 50px;
+            font-size: 1.5em;
+            margin: 0 10px;
+        }
+
+
+        input[type="number"], input[type="text"] {
+            padding: 12px;
+            font-size: 1.1em;
+            margin: 10px 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 90px;
+            text-align: center;
+        }
+
+        button { /* Estilos para botones genéricos, el enlace "atrás" no usará esto directamente */
+            padding: 12px 22px;
+            font-size: 1em;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 8px 5px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover { background-color: #218838; }
+        button:active { transform: scale(0.96); }
+
+        .comparison-button {
+            font-size: 1.5em !important;
+            width: 60px;
+            height: 60px;
+            background-color: #007bff;
+        }
+        .comparison-button:hover { background-color: #0056b3; }
+
+        .feedback {
+            font-weight: bold;
+            min-height: 25px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .feedback.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .feedback.correct { color: green; }
+        .feedback.incorrect { color: red; }
+
+        .footer-space { height: 50px; }
+    </style>
+</head>
+<body>
+    <button id="homeButton" onclick="goToHome()">🏠 Volver al Inicio</button>
+    <!-- Convertido a un enlace (<a>) con JavaScript en el href -->
+    <a href="pruebamovil.html" id="backLink">⬅️ Atrás</a>
+    
+   
+
+    <div class="background-container">
+        <div class="content-wrapper">
+            <h1>¡Aprende Matemáticas Jugando!</h1>
+
+            <!-- Juego 1: Contar Objetos -->
+            <div class="game-section" id="counting-game">
+                <h2>Juego de Contar 🍎🌟⚽</h2>
+                <p>Cuenta cuántos objetos ves y escribe el número.</p>
+                <div class="items-display" id="items-to-count"></div>
+                <input type="number" id="count-answer" placeholder="¿Cuántos?">
+                <button onclick="checkCount()">Revisar</button>
+                <button onclick="generateCountingProblem()">Otro!</button>
+                <p class="feedback" id="count-feedback"></p>
+            </div>
+
+            <!-- Juego 2: Sumas Simples -->
+            <div class="game-section" id="addition-game">
+                <h2>Juego de Sumas Simples ➕</h2>
+                <p>Resuelve la siguiente suma:</p>
+                <div class="question display" id="addition-problem"></div>
+                <input type="number" id="addition-answer" placeholder="Resultado">
+                <button onclick="checkAddition()">Revisar</button>
+                <button onclick="generateAdditionProblem()">Otra Suma!</button>
+                <p class="feedback" id="addition-feedback"></p>
+            </div>
+
+            <!-- Juego 3: Secuencias Numéricas -->
+            <div class="game-section" id="sequence-game">
+                <h2>Sigue la Secuencia 🔢</h2>
+                <p>¿Qué número sigue en esta secuencia?</p>
+                <div class="question display" id="sequence-problem"></div>
+                <input type="number" id="sequence-answer" placeholder="¿Número?">
+                <button onclick="checkSequence()">Revisar</button>
+                <button onclick="generateSequenceProblem()">Otra Secuencia!</button>
+                <p class="feedback" id="sequence-feedback"></p>
+            </div>
+
+            <!-- Juego 4: Mayor o Menor -->
+            <div class="game-section" id="comparison-game">
+                <h2>¿Mayor, Menor o Igual? 🤔</h2>
+                <p>Compara los dos números:</p>
+                <div class="number-comparison-display" id="comparison-numbers">
+                    <span id="comp-num1"></span> <span id="comp-operator">?</span> <span id="comp-num2"></span>
+                </div>
+                <button class="comparison-button" onclick="checkComparison('>')">></button>
+                <button class="comparison-button" onclick="checkComparison('<')"><</button>
+                <button class="comparison-button" onclick="checkComparison('=')">=</button>
+                <button onclick="generateComparisonProblem()">Otros Números!</button>
+                <p class="feedback" id="comparison-feedback"></p>
+            </div>
+
+            <!-- Juego 5: Asociar Número con Cantidad -->
+            <div class="game-section" id="number-quantity-game">
+                <h2>Asocia Número y Cantidad 🔢➡️🍎</h2>
+                <p>Haz clic en el grupo de objetos que corresponde al número:</p>
+                <div class="target-number-display" id="target-quantity-number"></div>
+                <div class="quantity-options-container" id="quantity-options">
+                    <!-- Las opciones se generarán aquí por JS -->
+                </div>
+                <button onclick="generateNumberQuantityProblem()">Otro Desafío!</button>
+                <p class="feedback" id="number-quantity-feedback"></p>
+            </div>
+
+            <!-- Juego 6: Ordenar Números Pequeños -->
+            <div class="game-section" id="ordering-game">
+                <h2>Ordena los Números ⬆️</h2>
+                <p>Escribe los números de menor a mayor:</p>
+                <div class="ordering-numbers-display" id="numbers-to-order"></div>
+                <div class="ordering-input-container">
+                    <input type="number" id="order-pos1" aria-label="Primer número ordenado">
+                    <input type="number" id="order-pos2" aria-label="Segundo número ordenado">
+                    <input type="number" id="order-pos3" aria-label="Tercer número ordenado">
+                </div>
+                <button onclick="checkOrdering()">Revisar Orden</button>
+                <button onclick="generateOrderingProblem()">Otros Números!</button>
+                <p class="feedback" id="ordering-feedback"></p>
+            </div>
+
+        </div>
+        <div class="footer-space"></div>
+    </div>
+
+    <script>
+        const itemEmojis = ['🍎', '🌟', '⚽', '🎈', '🍓', '🚗', '⭐', '🍉', '🧩', '🍦', '🍩'];
+
+        // --- Utilidad para mostrar feedback con animación ---
+        function showFeedback(element, message, isCorrect) {
+            element.textContent = message;
+            element.className = 'feedback'; // Reset classes
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
+            element.classList.add('show');
+        }
+
+        // --- Juego 1: Contar Objetos ---
+        let correctCount;
+        const itemsDisplay = document.getElementById('items-to-count');
+        const countAnswerInput = document.getElementById('count-answer');
+        const countFeedback = document.getElementById('count-feedback');
+
+        function generateCountingProblem() {
+            correctCount = Math.floor(Math.random() * 9) + 1;
+            const randomEmoji = itemEmojis[Math.floor(Math.random() * itemEmojis.length)];
+            itemsDisplay.innerHTML = Array(correctCount).fill(randomEmoji).join(' ');
+            countAnswerInput.value = '';
+            countFeedback.textContent = '';
+            countFeedback.className = 'feedback';
+        }
+        function checkCount() {
+            const userAnswer = parseInt(countAnswerInput.value);
+            if (isNaN(userAnswer)) {
+                showFeedback(countFeedback, 'Por favor, escribe un número.', false);
+                return;
+            }
+            showFeedback(countFeedback, userAnswer === correctCount ? '¡Correcto! 🎉' : `Casi... La respuesta era ${correctCount}.`, userAnswer === correctCount);
+        }
+
+        // --- Juego 2: Sumas Simples ---
+        let sumNum1, sumNum2, correctSum;
+        const additionProblemDisplay = document.getElementById('addition-problem');
+        const additionAnswerInput = document.getElementById('addition-answer');
+        const additionFeedback = document.getElementById('addition-feedback');
+
+        function generateAdditionProblem() {
+            sumNum1 = Math.floor(Math.random() * 10);
+            sumNum2 = Math.floor(Math.random() * 10);
+            correctSum = sumNum1 + sumNum2;
+            additionProblemDisplay.textContent = `${sumNum1} + ${sumNum2} = ?`;
+            additionAnswerInput.value = '';
+            additionFeedback.textContent = '';
+            additionFeedback.className = 'feedback';
+        }
+        function checkAddition() {
+            const userAnswer = parseInt(additionAnswerInput.value);
+            if (isNaN(userAnswer)) {
+                showFeedback(additionFeedback, 'Por favor, escribe un número.', false);
+                return;
+            }
+            showFeedback(additionFeedback, userAnswer === correctSum ? '¡Excelente! ✅' : `No es correcto. La respuesta era ${correctSum}.`, userAnswer === correctSum);
+        }
+
+        // --- Juego 3: Secuencias Numéricas ---
+        let sequenceCorrectAnswer;
+        const sequenceProblemDisplay = document.getElementById('sequence-problem');
+        const sequenceAnswerInput = document.getElementById('sequence-answer');
+        const sequenceFeedback = document.getElementById('sequence-feedback');
+
+        function generateSequenceProblem() {
+            const sequenceStart = Math.floor(Math.random() * 10) + 1;
+            const stepType = Math.random();
+            let sequenceStep = (stepType < 0.6) ? 1 : (stepType < 0.9) ? 2 : -1;
+            if (sequenceStep === -1 && sequenceStart < 3) sequenceStart = 3;
+
+            const num1 = sequenceStart;
+            const num2 = sequenceStart + sequenceStep;
+            sequenceCorrectAnswer = num2 + sequenceStep;
+
+            sequenceProblemDisplay.textContent = `${num1}, ${num2}, __?`;
+            sequenceAnswerInput.value = '';
+            sequenceFeedback.textContent = '';
+            sequenceFeedback.className = 'feedback';
+        }
+        function checkSequence() {
+            const userAnswer = parseInt(sequenceAnswerInput.value);
+            if (isNaN(userAnswer)) {
+                showFeedback(sequenceFeedback, 'Por favor, escribe un número.', false);
+                return;
+            }
+            showFeedback(sequenceFeedback, userAnswer === sequenceCorrectAnswer ? '¡Muy bien! 👍' : `El número correcto era ${sequenceCorrectAnswer}.`, userAnswer === sequenceCorrectAnswer);
+        }
+
+        // --- Juego 4: Mayor o Menor ---
+        let compNum1, compNum2, correctComparisonOperator;
+        const compNum1Display = document.getElementById('comp-num1');
+        const compNum2Display = document.getElementById('comp-num2');
+        const comparisonFeedback = document.getElementById('comparison-feedback');
+
+        function generateComparisonProblem() {
+            compNum1 = Math.floor(Math.random() * 20) + 1;
+            compNum2 = Math.floor(Math.random() * 20) + 1;
+            if (Math.random() > 0.2 && compNum1 === compNum2) compNum2 = (compNum2 % 20) + 1;
+
+            compNum1Display.textContent = compNum1;
+            compNum2Display.textContent = compNum2;
+            correctComparisonOperator = (compNum1 > compNum2) ? '>' : (compNum1 < compNum2) ? '<' : '=';
+            comparisonFeedback.textContent = '';
+            comparisonFeedback.className = 'feedback';
+            document.getElementById('comp-operator').textContent = '?';
+        }
+        function checkComparison(userChoice) {
+            document.getElementById('comp-operator').textContent = userChoice;
+            showFeedback(comparisonFeedback, userChoice === correctComparisonOperator ? '¡Correcto! 🥳' : `La respuesta correcta era "${correctComparisonOperator}".`, userChoice === correctComparisonOperator);
+        }
+
+        // --- Juego 5: Asociar Número con Cantidad ---
+        let targetQuantityNumberCorrect;
+        const targetQuantityNumberDisplay = document.getElementById('target-quantity-number');
+        const quantityOptionsContainer = document.getElementById('quantity-options');
+        const numberQuantityFeedback = document.getElementById('number-quantity-feedback');
+
+        function generateNumberQuantityProblem() {
+            targetQuantityNumberCorrect = Math.floor(Math.random() * 5) + 1; // Números del 1 al 5
+            targetQuantityNumberDisplay.textContent = targetQuantityNumberCorrect;
+
+            const options = new Set();
+            options.add(targetQuantityNumberCorrect);
+            while (options.size < 3) {
+                let randomOption = Math.floor(Math.random() * 5) + 1;
+                if (randomOption > 0) options.add(randomOption);
+            }
+
+            const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+            const randomEmoji = itemEmojis[Math.floor(Math.random() * itemEmojis.length)];
+
+            quantityOptionsContainer.innerHTML = '';
+            shuffledOptions.forEach(optValue => {
+                const optionDiv = document.createElement('div');
+                optionDiv.classList.add('quantity-option');
+                optionDiv.textContent = Array(optValue).fill(randomEmoji).join('');
+                optionDiv.dataset.value = optValue;
+                optionDiv.onclick = () => checkNumberQuantity(optValue, optionDiv);
+                quantityOptionsContainer.appendChild(optionDiv);
+            });
+            numberQuantityFeedback.textContent = '';
+            numberQuantityFeedback.className = 'feedback';
+        }
+
+        function checkNumberQuantity(chosenValue, chosenDiv) {
+            document.querySelectorAll('#quantity-options .quantity-option').forEach(opt => opt.classList.remove('selected'));
+            chosenDiv.classList.add('selected');
+
+            if (chosenValue === targetQuantityNumberCorrect) {
+                showFeedback(numberQuantityFeedback, '¡Exacto! 🤩 Has asociado bien.', true);
+            } else {
+                showFeedback(numberQuantityFeedback, `Mmm... El número era ${targetQuantityNumberCorrect}. ¡Mira de nuevo!`, false);
+            }
+        }
+
+        // --- Juego 6: Ordenar Números Pequeños ---
+        let correctOrderArray;
+        const numbersToOrderDisplay = document.getElementById('numbers-to-order');
+        const orderInput1 = document.getElementById('order-pos1');
+        const orderInput2 = document.getElementById('order-pos2');
+        const orderInput3 = document.getElementById('order-pos3');
+        const orderingFeedback = document.getElementById('ordering-feedback');
+
+        function generateOrderingProblem() {
+            let nums = new Set();
+            while (nums.size < 3) {
+                nums.add(Math.floor(Math.random() * 15) + 1);
+            }
+            const numbersToOrder = Array.from(nums);
+            correctOrderArray = [...numbersToOrder].sort((a, b) => a - b);
+            
+            const shuffledNumbers = [...numbersToOrder].sort(() => Math.random() - 0.5);
+            numbersToOrderDisplay.textContent = shuffledNumbers.join('  -  ');
+
+            orderInput1.value = '';
+            orderInput2.value = '';
+            orderInput3.value = '';
+            orderingFeedback.textContent = '';
+            orderingFeedback.className = 'feedback';
+        }
+
+        function checkOrdering() {
+            const userAnswer1 = parseInt(orderInput1.value);
+            const userAnswer2 = parseInt(orderInput2.value);
+            const userAnswer3 = parseInt(orderInput3.value);
+
+            if (isNaN(userAnswer1) || isNaN(userAnswer2) || isNaN(userAnswer3)) {
+                showFeedback(orderingFeedback, 'Por favor, llena todas las casillas con números.', false);
+                return;
+            }
+
+            const userOrderArray = [userAnswer1, userAnswer2, userAnswer3];
+            const isCorrect = userOrderArray.every((val, index) => val === correctOrderArray[index]);
+
+            if (isCorrect) {
+                showFeedback(orderingFeedback, '¡Perfecto! 👌 Los números están en orden.', true);
+            } else {
+                showFeedback(orderingFeedback, `¡Casi! El orden correcto era: ${correctOrderArray.join(', ')}.`, false);
+            }
+        }
+
+
+        // --- Función para "Volver al Inicio" y Reiniciar Juegos ---
+        function goToHome() {
+            window.scrollTo(0, 0);
+            generateCountingProblem();
+            generateAdditionProblem();
+            generateSequenceProblem();
+            generateComparisonProblem();
+            generateNumberQuantityProblem();
+            generateOrderingProblem();
+        }
+
+        // La función goBack() ya no es necesaria porque la acción está en el href del enlace.
+        // Si prefieres mantenerla, el HTML sería:
+        // <a href="#" id="backLink" onclick="goBack(); return false;">⬅️ Atrás</a>
+        // Y la función goBack() seguiría siendo:
+        // function goBack() { window.history.back(); }
+
+        // Inicializar los juegos al cargar la página
+        window.onload = function() {
+            goToHome();
+        };
+    </script>
+</body>
+</html>
